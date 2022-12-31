@@ -1,9 +1,14 @@
-import { StyleSheet, Text, View, TextInput, Button, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, KeyboardAvoidingView, TouchableOpacity} from 'react-native';
 import React from 'react';
 import { auth } from '../Firebase/config'
 import { sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from '@react-navigation/core'
 import DialogInput from 'react-native-dialog-input';
+import Background from "./Background";
+import Btn from "./Btn";
+import Field from "./Field";
+import { darkGreen } from "./Constants";
+// import PopoverTooltip from 'react-native-popover-tooltip';
 
 export default function Login() {
   const [userName, setUserName] = React.useState("");
@@ -70,49 +75,127 @@ export default function Login() {
   }
 
   return (
-    <KeyboardAvoidingView style={styles.container} behaviour="padding">
-      <Text>Log In</Text>
-      <View>
-        <Text>User Name :</Text>
-        <TextInput style={styles.input} onChangeText={(text)=>handleUserNameChange(text)} placeholder="Enter Your Name" keyboardType="email-address"></TextInput>
-        {!userNameValidity && <Text>Invalid username or email!</Text>}
-        <Text>Password :</Text>
-        <TextInput style={styles.input} onChangeText={(text)=>setPassword(text)} placeholder="Enter Your Password" secureTextEntry></TextInput>
+    <Background>
+      <View style={{ alignItems: "center", width: 460 }}>
+        <Text
+            style={{
+              color: "white",
+              fontSize: 64,
+              fontWeight: "bold",
+              marginVertical: 20,
+            }}
+        >
+            Login
+        </Text>
+        <View 
+          style={{
+            backgroundColor: "white",
+            height: 700,
+            width: 460,
+            borderTopLeftRadius: 130,
+            paddingTop: 100,
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              color: "grey",
+              fontSize: 19,
+              fontWeight: "bold",
+              marginBottom: 20,
+            }}
+          >
+            Login to your account
+          </Text>
+          
+          {/* <PopoverTooltip
+            ref='tooltip1'
+            buttonComponent={
+              <View style={{width:200, height:50, backgroundColor: 'orange', justifyContent: 'center', alignItems: 'center', borderRadius: 5}}>
+                <Text>
+                  Press Me
+                </Text>
+              </View>
+            }
+            items={[
+              {
+                label: 'Item 1',
+                onPress: () => {}
+              },
+              {
+                label: 'Item 2',
+                onPress: () => {}
+              }
+            ]}
+            // animationType='timing'
+            // using the default timing animation
+          />
+  */}
+          <Field
+            id="username"
+            placeholder="Email / Username"
+            keyboardType={"email-address"}
+            onChangeText={(text)=>handleUserNameChange(text)}
+          />
+          {!userNameValidity && <Text>Invalid username or email!</Text>}
+        
+          <Field placeholder="Password" secureTextEntry={true} onChangeText={(text)=>setPassword(text)}/>
+          <View
+            style={{
+              alignItems: "flex-end",
+              width: "78%",
+              paddingRight: 16,
+              marginBottom: 200,
+            }}
+          >
+            <Text
+              style={{ color: darkGreen, fontWeight: "bold", fontSize: 16 }}
+              onPress={forgotPassword}
+            >
+              Forgot Password ?
+            </Text>
+          </View>
 
-        <Button style={styles.button1} title="Log In" color="blue" onPress={logInToAcc}></Button>
-        <DialogInput isDialogVisible={dialogBoxVisibility}
-            title={"Password Recovery"}
-            message={"Enter registered email address :"}
-            hintInput ={"abc@gmail.com"}
-            submitInput={ (inputText) => {passwordResetEmail(inputText)} }
-            closeDialog={ () => {setDialogBoxVisibility(false)}}>
-        </DialogInput>
-        <Text style={styles.link} onPress={forgotPassword}>Forgot Password</Text>
-        <Button title="Sign Up" color="blue" onPress={redirectToSignUp}></Button>
+          <Btn
+            textColor="white"
+            bgColor={darkGreen}
+            btnLabel="Login"
+            Press={logInToAcc}
+          />
+
+          <DialogInput isDialogVisible={dialogBoxVisibility}
+              title={"Password Recovery"}
+              message={"Enter registered email address :"}
+              hintInput ={"abc@gmail.com"}
+              submitInput={ (inputText) => {passwordResetEmail(inputText)} }
+              closeDialog={ () => {setDialogBoxVisibility(false)}}>
+          </DialogInput>
+
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+          >
+            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+              Don't have an account ?{" "}
+            </Text>
+            <TouchableOpacity
+              onPress={redirectToSignUp}
+            >
+              <Text
+                style={{ color: darkGreen, fontWeight: "bold", fontSize: 16 }}
+              >
+                Signup
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+        </View>
       </View>
-    </KeyboardAvoidingView>
+    </Background>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  input: {
-    borderColor: "black",
-    borderWidth: 1,
-    marginTop:10,
-    marginBottom :10,
-    width:300,
-    padding: 10,
-  },
-  link: {
-    color: 'blue',
-    textDecorationLine : 'underline',
-    marginBottom : 20,
-    marginTop : 20,
-  }
-});
+
