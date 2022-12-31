@@ -176,19 +176,19 @@ export default function SignUp() {
               keyboardType={'email-address'}
               onChangeText={(text)=>handleEmailChange(text)}
             />
-            {!emailValidity && <Text>Invalid email!</Text>}
+            {!emailValidity && <Text style={styles.tip}>Invalid email!</Text>}
 
             <Field placeholder="Contact Number" keyboardType={'numeric'} onChangeText={(text)=>handlePhoneNumberChange(text)}/>
-            {!phoneNumberValidity && <Text>Please enter valid Phone number!</Text>}
+            {!phoneNumberValidity && <Text style={styles.tip}>Please enter valid Phone number!</Text>}
 
             <Text>Date of Birth :</Text>
             <Button title={text} onPress={() => setShow(true)}></Button>
 
             <Field placeholder="Password" secureTextEntry={true} onChangeText={(text)=>handlePasswordChange(text)}/>
-            {!passwordValidity && <Text>Please enter strong password!</Text>}
+            {!passwordValidity && <Text style={styles.tip}>Please enter strong password!</Text>}
 
             <Field placeholder="Confirm Password" secureTextEntry={true} onChangeText={(text)=>handleConfirmPasswordChange(text)}/>
-            {!confirmPasswordValidity && <Text>It should match with the new password!</Text>}
+            {!confirmPasswordValidity && <Text style={styles.tip}>It should match with the new password!</Text>}
 
             <Field placeholder="Bank Name" onChangeText={(text)=>setBankName(text)}/>
 
@@ -251,5 +251,11 @@ const styles = StyleSheet.create({
     marginBottom :5,
     width:300,
     padding: 10,
+  },
+  tip:{
+    color:"red", 
+    textAlign: 'left', 
+    width: '78%', 
+    paddingLeft: 10
   }
 });

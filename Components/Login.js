@@ -8,7 +8,7 @@ import Background from "./Background";
 import Btn from "./Btn";
 import Field from "./Field";
 import { darkGreen } from "./Constants";
-// import PopoverTooltip from 'react-native-popover-tooltip';
+
 
 export default function Login() {
   const [userName, setUserName] = React.useState("");
@@ -107,39 +107,15 @@ export default function Login() {
           >
             Login to your account
           </Text>
-          
-          {/* <PopoverTooltip
-            ref='tooltip1'
-            buttonComponent={
-              <View style={{width:200, height:50, backgroundColor: 'orange', justifyContent: 'center', alignItems: 'center', borderRadius: 5}}>
-                <Text>
-                  Press Me
-                </Text>
-              </View>
-            }
-            items={[
-              {
-                label: 'Item 1',
-                onPress: () => {}
-              },
-              {
-                label: 'Item 2',
-                onPress: () => {}
-              }
-            ]}
-            // animationType='timing'
-            // using the default timing animation
-          />
-  */}
           <Field
-            id="username"
             placeholder="Email / Username"
             keyboardType={"email-address"}
             onChangeText={(text)=>handleUserNameChange(text)}
           />
-          {!userNameValidity && <Text>Invalid username or email!</Text>}
+          {!userNameValidity && <Text style={styles.tip}>Invalid Email / Username!</Text>}
         
           <Field placeholder="Password" secureTextEntry={true} onChangeText={(text)=>setPassword(text)}/>
+
           <View
             style={{
               alignItems: "flex-end",
@@ -198,4 +174,11 @@ export default function Login() {
   );
 }
 
-
+const styles = StyleSheet.create({
+  tip:{
+    color:"red", 
+    textAlign: 'left', 
+    width: '78%', 
+    paddingLeft: 10
+  }
+});
