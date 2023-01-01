@@ -6,6 +6,8 @@ import { useNavigation } from '@react-navigation/core';
 const Home = () => {
 
     const navigation = useNavigation();
+
+
     const signOutFromAcc = () => {
         auth
             .signOut()

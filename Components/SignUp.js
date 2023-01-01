@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, Button, KeyboardAvoidingView, ScrollView, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, KeyboardAvoidingView, ScrollView, TouchableOpacity, Pressable} from 'react-native';
 import React from 'react';
 import { auth , db } from '../Firebase/config'
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -8,10 +8,8 @@ import Background from "./Background";
 import Btn from "./Btn";
 import Field from "./Field";
 import { darkGreen } from "./Constants";
-import { useNavigation } from '@react-navigation/core'
 
-
-export default function SignUp() {
+export default function SignUp(props) {
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [phoneNo, setPhoneNo] = React.useState(0);
@@ -26,8 +24,7 @@ export default function SignUp() {
   const [passwordValidity, setPasswordValidity] = React.useState(true);
   const [confirmPasswordValidity, setConfirmPasswordValidity] = React.useState(true);
   const [phoneNumberValidity, setPhoneNumberValidity] = React.useState(true);
-
-  const navigation = useNavigation();
+  const [formattedDate, setFormattedDate] = React.useState("Date of Birth");
 
   const handleEmailChange = (emailInput) => {
 
@@ -78,8 +75,21 @@ export default function SignUp() {
 
   const validateInputOnSubmit = () => {
 
-    if(name === "" || email === "" || phoneNo === 0 || DOB || password === "" || confirmPassword === "" || bankName === "" || accBalance === 0 || passwordValidity || phoneNumberValidity || emailValidity || confirmPasswordValidity)
+    if(name === "" || email === "" || phoneNo === 0 || DOB || password === "" || confirmPassword === "" || bankName === "" || accBalance === 0 || !passwordValidity || !phoneNumberValidity || !emailValidity || !confirmPasswordValidity)
     {
+      console.log(name);
+      console.log(email);
+      console.log(phoneNo);
+      console.log(DOB);
+      console.log(password);
+      console.log(confirmPassword);
+      console.log(bankName);
+      console.log(accBalance);
+      console.log(passwordValidity);
+      console.log(phoneNumberValidity);
+      console.log(emailValidity);
+      console.log(confirmPasswordValidity);
+
       alert("Please enter all required fields correctly!");
       return false;
     }
@@ -129,6 +139,7 @@ export default function SignUp() {
     const tempDate = new Date(currentDate);
     let fDate = tempDate.getDate() + '/'+ tempDate.getMonth() + '/' +tempDate.getFullYear();
     setText(fDate);
+    setFormattedDate(fDate);
     console.log(fDate, "Date");
 
   }
@@ -181,8 +192,9 @@ export default function SignUp() {
             <Field placeholder="Contact Number" keyboardType={'numeric'} onChangeText={(text)=>handlePhoneNumberChange(text)}/>
             {!phoneNumberValidity && <Text style={styles.tip}>Please enter valid Phone number!</Text>}
 
-            <Text>Date of Birth :</Text>
-            <Button title={text} onPress={() => setShow(true)}></Button>
+            <Pressable style={{borderRadius: 25, color: darkGreen, paddingHorizontal: 10, width: '70%', height:40, backgroundColor: 'rgb(220,220, 220)', marginVertical: 10, paddingVertical:10}} onPress={() => setShow(true)}>
+              <Text style={{color: darkGreen}}>{formattedDate}</Text>
+            </Pressable>
 
             <Field placeholder="Password" secureTextEntry={true} onChangeText={(text)=>handlePasswordChange(text)}/>
             {!passwordValidity && <Text style={styles.tip}>Please enter strong password!</Text>}
@@ -202,6 +214,7 @@ export default function SignUp() {
               display="default"
               is24Hour={true}
               onChange={onChange}
+              style={styles.datePicker}
             />)}
 
             <Btn
@@ -221,7 +234,7 @@ export default function SignUp() {
                 Already have an account ?{' '}
               </Text>
               <TouchableOpacity
-                onPress={() => navigation.replace('Login')}>
+                onPress={() => props.navigation.navigate('Login')}>
                 <Text
                   style={{color: darkGreen, fontWeight: 'bold', fontSize: 16}}>
                   Login
@@ -238,24 +251,18 @@ export default function SignUp() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  input: {
-    borderColor: "black",
-    borderWidth: 1,
-    marginTop:5,
-    marginBottom :5,
-    width:300,
-    padding: 10,
-  },
+  
   tip:{
     color:"red", 
     textAlign: 'left', 
-    width: '78%', 
+    width: '70%', 
     paddingLeft: 10
-  }
+  },
+  datePicker: {
+    width: 320,
+    height: 260,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+  },
 });

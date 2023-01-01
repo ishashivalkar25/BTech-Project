@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, TextInput, Button, KeyboardAvoidingView, Toucha
 import React from 'react';
 import { auth } from '../Firebase/config'
 import { sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigation } from '@react-navigation/core'
+import { useNavigation } from '@react-navigation/core';
 import DialogInput from 'react-native-dialog-input';
 import Background from "./Background";
 import Btn from "./Btn";
@@ -10,11 +10,11 @@ import Field from "./Field";
 import { darkGreen } from "./Constants";
 
 
-export default function Login() {
+export default function Login(props) {
   const [userName, setUserName] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [dialogBoxVisibility, setDialogBoxVisibility] = React.useState(false);
-  const [userNameValidity, setUserNameValidity] = React.useState(false);
+  const [userNameValidity, setUserNameValidity] = React.useState(true);
 
   const navigation = useNavigation();
   React.useEffect(() => {
@@ -22,9 +22,10 @@ export default function Login() {
       if(user){
         navigation.replace("Home");
       }
-      setUserName("");
-      setPassword("");
     });
+    setUserName("");
+    setPassword("");
+    setUserNameValidity(true);
     return unsubscribe;
   }, []);
 
@@ -54,7 +55,7 @@ export default function Login() {
   
 
   const redirectToSignUp = () => {
-    navigation.replace("Sign Up");
+    props.navigation.navigate("Sign Up");
   }
 
   const forgotPassword = () => {
@@ -76,7 +77,7 @@ export default function Login() {
 
   return (
     <Background>
-      <View style={{ alignItems: "center", width: 460 }}>
+      <View style={{ alignItems: "center", width: "100%", marginTop:40}}>
         <Text
             style={{
               color: "white",
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
   tip:{
     color:"red", 
     textAlign: 'left', 
-    width: '78%', 
+    width: '70%', 
     paddingLeft: 10
   }
 });

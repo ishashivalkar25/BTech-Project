@@ -19,3 +19,5 @@ expo install react-native-keyboard-aware-scroll-view
 
 expo install react-native-keyboard-aware-view
 expo install react-native-tooltips
+
+expo install @react-native-async-storage/async-storage
