@@ -12,7 +12,7 @@ import { darkGreen } from "./Constants";
 export default function SignUp(props) {
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
-  const [phoneNo, setPhoneNo] = React.useState(0);
+  const [phoneNo, setPhoneNo] = React.useState("");
   const [DOB, setDOB] = React.useState(new Date());
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
@@ -67,6 +67,7 @@ export default function SignUp(props) {
       if(confirmPasswordInput === password)
       {
         setConfirmPasswordValidity(true);
+        setConfirmPassword(confirmPasswordInput);
       }
       else{
         setConfirmPasswordValidity(false);
@@ -75,20 +76,19 @@ export default function SignUp(props) {
 
   const validateInputOnSubmit = () => {
 
-    if(name === "" || email === "" || phoneNo === 0 || DOB || password === "" || confirmPassword === "" || bankName === "" || accBalance === 0 || !passwordValidity || !phoneNumberValidity || !emailValidity || !confirmPasswordValidity)
+    if(name === "" || email === "" || phoneNo == "" || !DOB || password === "" || confirmPassword === "" || bankName === "" || accBalance == 0 || !passwordValidity || !phoneNumberValidity || !emailValidity || !confirmPasswordValidity)
     {
-      console.log(name);
-      console.log(email);
-      console.log(phoneNo);
-      console.log(DOB);
-      console.log(password);
-      console.log(confirmPassword);
-      console.log(bankName);
-      console.log(accBalance);
-      console.log(passwordValidity);
-      console.log(phoneNumberValidity);
-      console.log(emailValidity);
-      console.log(confirmPasswordValidity);
+      // console.log("name", name);
+      // console.log("email", email === "");
+      // console.log("phoneNo", phoneNo == "");
+      // console.log("DOB", !DOB);
+      // console.log("password", password === "");
+      // console.log("confirmPassword", confirmPassword === "");
+      // console.log("bankName", bankName === "");
+      // console.log( "accBalance",accBalance == 0);
+      // console.log(!phoneNumberValidity);
+      // console.log(!emailValidity);
+      // console.log(!confirmPasswordValidity);
 
       alert("Please enter all required fields correctly!");
       return false;
@@ -111,7 +111,6 @@ export default function SignUp(props) {
             email: email,
             phoneNo: phoneNo,
             DOB:DOB,
-            password:password,
             bankName: bankName,
             accBalance: accBalance
           });
@@ -137,7 +136,7 @@ export default function SignUp(props) {
     setDOB(currentDate);
     console.log(DOB, "new");
     const tempDate = new Date(currentDate);
-    let fDate = tempDate.getDate() + '/'+ tempDate.getMonth() + '/' +tempDate.getFullYear();
+    let fDate = tempDate.getDate() + '/'+ (tempDate.getMonth()+1) + '/' +tempDate.getFullYear();
     setText(fDate);
     setFormattedDate(fDate);
     console.log(fDate, "Date");
