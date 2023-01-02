@@ -1,9 +1,13 @@
 import React from "react";
 import { View, ImageBackground } from "react-native";
 
+import {useSafeAreaInsets} from 'react-native-safe-area-context'; 
+
 const Background = ({children }) => {
+
+  const insets = useSafeAreaInsets();
   return (
-    <View>
+    <View style={{marginTop:insets.top}}>
       <ImageBackground
         source={require('../assets/background4.jpg')}
         style={{ height: "100%"}}

@@ -5,7 +5,7 @@ import Btn from "./Btn";
 import { darkGreen, green } from "./Constants";
 
 const Index = (props) => {
-
+    
     return (
         <Background>
             <View style={{marginTop:40}}></View>

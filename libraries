@@ -21,3 +21,13 @@ expo install react-native-keyboard-aware-view
 expo install react-native-tooltips
 
 expo install @react-native-async-storage/async-storage
+
+npm install react-native-modal
+npm install --save react-native-image-picker 
+npx expo install react-native-screens react-native-safe-area-context
+npm install react-native-root-toast
+npm install @react-navigation/material-top-tabs  
+npm install react-native-tab-view   
+npm install @react-navigation/material-bottom-tabs
+npm install @react-navigation/bottom-tabs   
+npm install react-native-element-dropdown

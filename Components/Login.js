@@ -20,7 +20,7 @@ export default function Login(props) {
   React.useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if(user){
-        navigation.replace("Home");
+        navigation.replace("HomePage");
       }
     });
     setUserName("");
@@ -34,7 +34,8 @@ export default function Login(props) {
     signInWithEmailAndPassword(auth, userName, password)
       .then(userCredentials => {
         const user = userCredentials.user;
-        console.log("user email :", user.email)
+        console.log("user email :", user.email);
+        navigation.replace("HomePage");
       })
       .catch(error => alert(error.message));
   }

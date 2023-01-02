@@ -176,7 +176,7 @@ export default function SignUp(props) {
             height: '100%',
             width: 460,
             borderTopLeftRadius: 130,
-            paddingTop: 50,
+            paddingTop: 20,
             alignItems: 'center',
           }}>
 
