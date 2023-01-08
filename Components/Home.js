@@ -15,7 +15,7 @@ const Home = () => {
                 navigation.replace("Login");
                 console.log("Sign out")
             })
-            .catch(error => console.error(error.message));
+            .catch(error => alert("Cannot signout from the application!!"));
     }
     return (
         <View>

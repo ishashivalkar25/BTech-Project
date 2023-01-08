@@ -19,8 +19,9 @@ export default function Login(props) {
   const navigation = useNavigation();
   React.useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
-      if(user){
+      if(user && user.emailVerified){
         navigation.replace("HomePage");
+        console.log(user);
       }
     });
     setUserName("");
@@ -35,9 +36,18 @@ export default function Login(props) {
       .then(userCredentials => {
         const user = userCredentials.user;
         console.log("user email :", user.email);
-        navigation.replace("HomePage");
+        if(user.emailVerified){
+          navigation.replace("HomePage");
+          console.log(JSON.stringify(user));
+          alert("Logged In Successfully!!!");
+        }
+        else
+        {
+          alert("Please verify your Email. Link is already sent.");
+          auth.signOut();
+        }
       })
-      .catch(error => alert(error.message));
+      .catch(error => alert("Username/ Password is incorrect!!"));
   }
 
   //validate email i.e username

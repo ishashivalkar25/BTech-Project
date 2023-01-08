@@ -1,14 +1,16 @@
 import * as React from 'react'
-import {Text,View,Button,StyleSheet,Image, TouchableOpacity, Dimensions} from 'react-native'
+import {Text,View,Button,StyleSheet,Image, ImageBackground, TouchableOpacity, Dimensions} from 'react-native'
 import {NavigationContainer} from '@react-navigation/native'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { auth , db } from '../Firebase/config'
 
 const Tab = createMaterialTopTabNavigator();
 const BTab = createBottomTabNavigator();
 const {height, width} = Dimensions.get('window');
 import { useNavigation } from '@react-navigation/core';
+import Background from './Background';
 
 function Income(props){
     const navigation = useNavigation();
@@ -19,34 +21,21 @@ function Income(props){
                 navigation.replace("Login");
                 console.log("Sign out")
             })
-            .catch(error => console.error(error.message));
+            .catch(error => alert("Cannot signout from the application!!"));
     }
     return(
-        <View >
-        <View style={{width:'100%',height:'100%',flexDirection:'column',justifyContent: 'flex-end'}}>
-        <View style={{width:'100%', height:100, justifyContent: 'flex-end',alignItems: 'center'}}>
-          <View style={{width:'100%',height:70, position:'absolute', bottom:0, backgroundColor:'white', flexDirection:'row', justifyContent: 'flex-end'}}>
-              <TouchableOpacity
-              style={{
-                  width:'33%',
-                  height:'100%',
-                  justifyContent: 'center',
-                  alignItems: 'center'
-              }}
-              >
-                
-                  
-              </TouchableOpacity>
-          </View>
-  
-          <View style={{alignSelf: 'center'}}>
-          <View style={{alignSelf: 'center',height: '100%'}}>
-                <View style={{backgroundColor:'white',width:68,borderRadius:35}}>
+        <>
+         <View style={{width:'100%'}}>
+            <ImageBackground
+                source={require('../assets/background4.jpg')}
+                style={{ height: "100%",flexDirection:'column',justifyContent:'flex-end'}}
+            >
+                <View style={{justifyContent:'center',alignItems: 'center',marginBottom:40}}>
                 <View 
-                    style={{width:60,
-                    height:60,
+                    style={{width:70,
+                    height:70,
                     borderRadius:35,
-                    backgroundColor:'red',
+                    backgroundColor:"#006A42",
                     justifyContent:'center',
                     alignItems: 'center',
                     alignSelf: 'center',
@@ -56,22 +45,22 @@ function Income(props){
                 onStartShouldSetResponder={()=>{props.navigation.navigate('AddIncome')}}
                 >
                 <Image source={require('../assets/plus.jpeg')}
-                  style={{width:30,height:30}}
-                  onPress={() => console.log('image pressed')}
-                  />
+                style={{width:30,height:30}}
+                onPress={() => console.log('image pressed')}
+                />
                 </View>
                 </View>
-          </View>
 
+           
+            
+           <View style={{fontWeight:'50%',borderTopLeftRadius:140,borderTopEndRadius: 140,width:(width*0.9),alignSelf:'center'}}>
+            <Button color="grey" style={{fontWeight:'50%',borderRadius:15,marginBottom:10}} title="Sign Out" onPress={signOutFromAcc}></Button>
           </View>
-          
-      </View>
-        </View>
-        <View>
-            <Text>Home</Text>
-            <Button title="Sign Out" onPress={signOutFromAcc}></Button>
-        </View>
-      </View>
+          </ImageBackground>
+         </View>
+   
+       
+        </>
     )
 }
 
@@ -91,8 +80,8 @@ function MyTabs({navigation}) {
         <Tab.Navigator
         initialRouteName="Income"
         tabBarOptions={{
-            activeTintColor:'#e91e63',
-            labelStyle:{fontSize:12},
+            activeTintColor:'green',
+            labelStyle:{fontSize:16},
             style:{backgroundColor:'white',marginTop:insets.top}
         }}>
             <Tab.Screen 
@@ -173,7 +162,10 @@ function BottomTab(){
 export default function HompePage({navigation}){
     return(
         // <NavigationContainer independent={true}>
+           <View style={{flex:1,flexDirection: 'column'}}>
             <MyTabs navigation={navigation}/>
+            {/* <Background></Background> */}
+           </View>
         // </NavigationContainer>
     )
 }

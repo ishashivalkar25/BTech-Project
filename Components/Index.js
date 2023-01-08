@@ -8,20 +8,20 @@ const Index = (props) => {
     
     return (
         <Background>
-            <View style={{marginTop:40}}></View>
-            <View style={{ marginHorizontal: 50, marginVertical: 50 }}>
-                <Text style={{ color: "white", fontSize: 32, fontWeight: "bold" }}>
-                Money Income &{" "}
+           <View style={{marginTop:40}}></View>
+            <View style={{ marginHorizontal: 50, marginVertical: 50 ,alignItems: 'center'}}>
+                <Text style={{ color: "#D0F0C0", fontSize: 40, fontWeight: "bold" ,}}>
+                MoneyWise 
                 </Text>
                 <Text
                 style={{
-                    color: "white",
-                    fontSize: 32,
+                    color: "#5E716A",
+                    fontSize: 18,
                     fontWeight: "bold",
                     marginBottom: 40,
                 }}
                 >
-                Expense Tracker
+               (Income & Expense Tracker)
                 </Text>
                 {/* <Lottie animationData={animation1} /> */}
             </View>
@@ -30,11 +30,12 @@ const Index = (props) => {
                 style={{
                 backgroundColor: "white",
                 // marginTop: "700",
-                height: 400,
+                height: 700,
                 width: 420,
                 borderTopLeftRadius: 140,
                 borderTopEndRadius: 140,
-                paddingTop: 100,
+                paddingTop: 80,
+                marginTop:40
                 }}
             >
                 <View
@@ -46,7 +47,7 @@ const Index = (props) => {
                         width: 420,
                         borderTopLeftRadius: 140,
                         borderTopEndRadius: 140,
-                        paddingTop: 100,
+                        paddingTop: 80,
                     }}
                     >
                     <View
@@ -58,7 +59,7 @@ const Index = (props) => {
                         width: 420,
                         borderTopLeftRadius: 140,
                         borderTopEndRadius: 140,
-                        paddingTop: 100,
+                        paddingTop: 80,
                         }}
                     >
                         <View
@@ -84,7 +85,6 @@ const Index = (props) => {
                     </View>
                 </View>
             </View>  
-            
         </Background>
     )
 }

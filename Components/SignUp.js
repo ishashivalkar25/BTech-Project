@@ -1,13 +1,15 @@
 import { StyleSheet, Text, View, TextInput, Button, KeyboardAvoidingView, ScrollView, TouchableOpacity, Pressable} from 'react-native';
 import React from 'react';
 import { auth , db } from '../Firebase/config'
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { doc , setDoc  } from "firebase/firestore";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Background from "./Background";
 import Btn from "./Btn";
 import Field from "./Field";
 import { darkGreen } from "./Constants";
+import { useNavigation } from '@react-navigation/core';
+
 
 export default function SignUp(props) {
   const [name, setName] = React.useState("");
@@ -24,7 +26,11 @@ export default function SignUp(props) {
   const [passwordValidity, setPasswordValidity] = React.useState(true);
   const [confirmPasswordValidity, setConfirmPasswordValidity] = React.useState(true);
   const [phoneNumberValidity, setPhoneNumberValidity] = React.useState(true);
+  const [accBalanceValidity, setAccBalanceValidity] = React.useState(true);
   const [formattedDate, setFormattedDate] = React.useState("Date of Birth");
+
+
+  const navigation = useNavigation();
 
   const handleEmailChange = (emailInput) => {
 
@@ -52,7 +58,9 @@ export default function SignUp(props) {
   }
 
   const handlePasswordChange = (passwordInput) => {
-    const reg = new RegExp("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$");
+   
+    const reg = new RegExp("^(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[0-9]){2,})(?=(.*[!@#$%^&*()\-__+.]){1,}).{8,}$");
+
     if (reg.test(passwordInput) === true){
       setPasswordValidity(true);
       setPassword(passwordInput);
@@ -74,22 +82,11 @@ export default function SignUp(props) {
       }
   }
 
+
   const validateInputOnSubmit = () => {
 
-    if(name === "" || email === "" || phoneNo == "" || !DOB || password === "" || confirmPassword === "" || bankName === "" || accBalance == 0 || !passwordValidity || !phoneNumberValidity || !emailValidity || !confirmPasswordValidity)
+    if(name === "" || email === "" || phoneNo == "" || !DOB || password === "" || confirmPassword === "" || bankName === "" || !passwordValidity || !phoneNumberValidity || !emailValidity || !confirmPasswordValidity || !accBalanceValidity)
     {
-      // console.log("name", name);
-      // console.log("email", email === "");
-      // console.log("phoneNo", phoneNo == "");
-      // console.log("DOB", !DOB);
-      // console.log("password", password === "");
-      // console.log("confirmPassword", confirmPassword === "");
-      // console.log("bankName", bankName === "");
-      // console.log( "accBalance",accBalance == 0);
-      // console.log(!phoneNumberValidity);
-      // console.log(!emailValidity);
-      // console.log(!confirmPasswordValidity);
-
       alert("Please enter all required fields correctly!");
       return false;
     }
@@ -104,7 +101,7 @@ export default function SignUp(props) {
       .then(userCredentials => {
         const user = userCredentials.user;
         console.log("Sign In Successfully!!!", user.uid);
-
+        
         try {
           setDoc(doc(db, "User", user.uid), {
             name: name,
@@ -114,15 +111,37 @@ export default function SignUp(props) {
             bankName: bankName,
             accBalance: accBalance
           });
-          console.log("User Added Successfully to database!!! ");
+          sendEmailVerification(auth.currentUser)
+            .then(() => {
+              console.log("Your account is created successfully!! Email verification Link is sent to your registered Email.");
+            });
+          auth.signOut();
+          navigation.replace("Login");
+          
         } catch (e) {
-          console.error("Error adding document: ", e);
+          console.log("Error adding document ");
         }
+       
       })
       .catch(error => {
         // signUpSuccess = false;
-        console.error("Sign In Unsuccesfull!!!", error);
+        alert("Sign In Unsuccesfull!!!");
       });
+
+    }
+
+  }
+
+  const handleAccBalanceChange = (accBalanceInput) => {
+
+    const reg = new RegExp("^[0-9]*$");
+
+    if (reg.test(accBalanceInput) === true){
+      setAccBalanceValidity(true);
+      setAccBalance(accBalanceInput);
+    }
+    else{
+      setAccBalanceValidity(false);
     }
 
   }
@@ -130,16 +149,26 @@ export default function SignUp(props) {
   const onChange = (event, selectedDate) => {
     console.log("Inside");
     setShow(false);
-    console.log(selectedDate);
-    console.log(DOB);
-    const currentDate = selectedDate || DOB;
-    setDOB(currentDate);
-    console.log(DOB, "new");
-    const tempDate = new Date(currentDate);
-    let fDate = tempDate.getDate() + '/'+ (tempDate.getMonth()+1) + '/' +tempDate.getFullYear();
-    setText(fDate);
-    setFormattedDate(fDate);
-    console.log(fDate, "Date");
+
+    const todayDate = new Date();
+    if(selectedDate.getTime() >= todayDate.getTime())
+    {
+      alert("Please select correct date of birth!");
+    }
+    else
+    {
+      const currentDate = selectedDate || DOB;
+      setDOB(currentDate);
+      console.log(DOB, "new");
+      const tempDate = new Date(currentDate);
+      let fDate = tempDate.getDate() + '/'+ (tempDate.getMonth()+1) + '/' +tempDate.getFullYear();
+      setText(fDate);
+      setFormattedDate(fDate);
+      console.log(fDate, "Date");
+    }
+    // console.log(selectedDate);
+    // console.log(DOB);
+    
 
   }
 
@@ -148,28 +177,28 @@ export default function SignUp(props) {
     //
     <View>
       <Background>
-      <ScrollView contentContainerStyle={{paddingBottom: 120}}>
-        <View style={{alignItems: 'center', width: 460 }}>
-          <Text
+        {/* <ScrollView contentContainerStyle={{paddingBottom: 120}}> */}
+          <View style={{alignItems: 'center', width: 460 }}>
+            <Text
+                style={{
+                  color: 'white',
+                  fontSize: 64,
+                  fontWeight: 'bold',
+                  marginTop: 20,
+                }}>
+                Register
+            </Text>
+            <Text
               style={{
                 color: 'white',
-                fontSize: 64,
+                fontSize: 19,
                 fontWeight: 'bold',
-                marginTop: 20,
+                marginBottom: 20,
               }}>
-              Register
-          </Text>
-          <Text
-            style={{
-              color: 'white',
-              fontSize: 19,
-              fontWeight: 'bold',
-              marginBottom: 20,
-            }}>
-            Create a new account
-          </Text>
-        </View>
-        <View
+              Create a new account
+            </Text>
+          </View>
+          <View
           style={{
             backgroundColor: 'white',
             height: '100%',
@@ -179,7 +208,7 @@ export default function SignUp(props) {
             alignItems: 'center',
           }}>
 
-            <Field placeholder="First Name" onChangeText={(text)=>setName(text)}/>
+            <Field placeholder="Name" onChangeText={(text)=>setName(text)}/>
 
             <Field
               placeholder="Email / Username"
@@ -203,7 +232,8 @@ export default function SignUp(props) {
 
             <Field placeholder="Bank Name" onChangeText={(text)=>setBankName(text)}/>
 
-            <Field placeholder="Account Balance" keyboardType="decimal-pad" onChangeText={(text)=>setAccBalance(text)} />
+            <Field placeholder="Account Balance" keyboardType="decimal-pad" onChangeText={(text)=>handleAccBalanceChange(text)} />
+            {!accBalanceValidity && <Text style={styles.tip}>Invalid Amount!</Text>}
 
 
             {show && (
@@ -241,7 +271,7 @@ export default function SignUp(props) {
               </TouchableOpacity>
             </View>
           </View>
-        </ScrollView>
+        {/* </ScrollView> */}
       </Background>
      
     </View>
