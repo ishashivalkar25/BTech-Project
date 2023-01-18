@@ -64,11 +64,53 @@ function Income(props){
     )
 }
 
-function Expense(){
+function Expense(props){
+    const navigation = useNavigation();
+    const signOutFromAcc = () => {
+        auth
+            .signOut()
+            .then(() => {
+                navigation.replace("Login");
+                console.log("Sign out")
+            })
+            .catch(error => alert("Cannot signout from the application!!"));
+    }
     return(
-        <View>
-            <Text>Expense page</Text>
-        </View>
+        <>
+         <View style={{width:'100%'}}>
+            <ImageBackground
+                source={require('../assets/background4.jpg')}
+                style={{ height: "100%",flexDirection:'column',justifyContent:'flex-end'}}
+            >
+                <View style={{justifyContent:'center',alignItems: 'center',marginBottom:40}}>
+                <View 
+                    style={{width:70,
+                    height:70,
+                    borderRadius:35,
+                    backgroundColor:"#006A42",
+                    justifyContent:'center',
+                    alignItems: 'center',
+                    alignSelf: 'center',
+                    marginTop:5,
+                    marginBottom:5 
+                }}
+                onStartShouldSetResponder={()=>{props.navigation.navigate('AddExpense')}}
+                >
+                <Image source={require('../assets/plus.jpeg')}
+                style={{width:30,height:30}}
+                onPress={() => console.log('image pressed')}
+                />
+                </View>
+                </View>
+
+           
+            
+            <View style={{fontWeight:'50%',borderTopLeftRadius:140,borderTopEndRadius: 140,width:(width*0.9),alignSelf:'center'}}>
+                <Button color="grey" style={{fontWeight:'50%',borderRadius:15,marginBottom:10}} title="Sign Out" onPress={signOutFromAcc}></Button>
+            </View>
+          </ImageBackground>
+         </View>
+        </>
     )
 }
 

@@ -31,3 +31,4 @@ npm install react-native-tab-view
 npm install @react-navigation/material-bottom-tabs
 npm install @react-navigation/bottom-tabs   
 npm install react-native-element-dropdown
+

@@ -8,6 +8,7 @@ import Home from './Components/Home';
 import Index from './Components/Index';
 import HomePage from './Components/HomePage';
 import AddIncome from './Components/AddIncome';
+import AddExpense from './Components/AddExpense';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +23,7 @@ export default function App() {
         <Stack.Screen  name="Home" component={Home} />
         <Stack.Screen  name="HomePage" component={HomePage} />
         <Stack.Screen  name="AddIncome" component={AddIncome} />
+        <Stack.Screen  name="AddExpense" component={AddExpense} />
       </Stack.Navigator>
     </NavigationContainer>
   );

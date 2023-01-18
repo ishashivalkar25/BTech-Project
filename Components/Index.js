@@ -3,9 +3,22 @@ import { StyleSheet, Text, View } from 'react-native'
 import Background from "./Background";
 import Btn from "./Btn";
 import { darkGreen, green } from "./Constants";
+import { useNavigation } from '@react-navigation/core';
+import { auth } from '../Firebase/config' 
 
 const Index = (props) => {
     
+    const navigation = useNavigation();
+    React.useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged(user => {
+        if(user && user.emailVerified){
+            navigation.replace("HomePage");
+            // console.log(user);
+        }
+        });
+        return unsubscribe;
+    }, []);
+  
     return (
         <Background>
            <View style={{marginTop:40}}></View>
