@@ -10,7 +10,8 @@ import {
   Modal,
   Image,
   TouchableOpacity,
-  ImageBackground
+  ImageBackground, 
+  ScrollView
 } from "react-native";
 // import DatePicker from 'react-native-datepicker';
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -28,15 +29,16 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 import { Dropdown } from "react-native-element-dropdown";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import uploadImg from "../assets/addImage.jpeg";
+import uploadImg from "../assets/uploadReceiptIcon.png";
 // import { TouchableOpacity } from 'react-native-web';
 import * as ImagePicker from "expo-image-picker";
 import Toast from "react-native-root-toast";
 import Btn from "./Btn";
 import Background from "./Background";
 import { darkGreen } from "./Constants";
+import {useSafeAreaInsets, withSafeAreaInsets} from 'react-native-safe-area-context';
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 export default function AddIncome() {
   const [loading, setLoading] = useState(true); // Set loading to true on component mount
@@ -47,7 +49,7 @@ export default function AddIncome() {
   const [isCatModalVisible, setVisibilityOfCatModal] = useState(false);
   const [isImgModalVisible, setVisibilityOfImgModal] = useState(false);
   const [date, setDate] = useState(new Date());
-
+  const insets = useSafeAreaInsets();
   const [amount, setAmount] = useState(0);
   const [description, setDescription] = useState("");
   const [mounted,setMounted] = useState(false);
@@ -84,12 +86,12 @@ export default function AddIncome() {
 
   //   // console.log(catList);
   //   //   setUsers(users);
-    
+
   // }
 
   // useEffect(() => {
   //     console.log("Inside use-effect")
-    
+
   //     addCategory();
   //   }, []);
 
@@ -104,7 +106,7 @@ export default function AddIncome() {
   //         console.log(getcat);
   //         catList.push(getcat);
   //         });
-  
+
   //         console.log(catList)
   //         catList.push({ label: "other", value: "other" });
   //         setCategory(catList);
@@ -121,13 +123,12 @@ export default function AddIncome() {
         const querySnapshot = await getDocs(collection(db, "IncCategory"));
         querySnapshot.forEach((doc) => {
           //   console.log(doc.id, JSON.stringify(doc.data()));
-          catName = doc.data();
+          const catName = doc.data();
           getcat = { label: catName.IncCatName, value: catName.IncCatName };
           console.log(getcat);
           catList.push(getcat);
         });
-  
-          // console.log(catList)
+
         catList.push({ label: "other", value: "other" });
         setCategory(catList);
         // console.log(category);
@@ -396,24 +397,29 @@ export default function AddIncome() {
     //     console.log(doc.id, JSON.stringify(doc.data()));
     //   });
     //   }
-      
+
     // } catch (e) {
     //   console.error("Error adding document: ", e);
     // }
   };
 
-  
+
   return (
-    <Background> 
+    <ImageBackground
+        source={require('../assets/background4.jpg')}
+        style={{width: width, height: height, marginTop:insets.top}}
+      >
       <Text style={styles.Title}>Add Income</Text>
       <View style={styles.container}>
+
       <View style={styles.mainContainer}>
+      <ScrollView>
         <View style={styles.container1}>
-        <View style={styles.amt}>
-          <Text style={styles.head}>Amount: </Text>
+        <View style={styles.inputPair}>
+          <Text style={styles.head}>Amount:</Text>
           <TextInput
             keyboardType="numeric"
-            style={styles.input}
+            style={styles.inputText}
             onChangeText={setAmount}
           />
           </View>
@@ -429,12 +435,12 @@ export default function AddIncome() {
             />
           )}
 
-      <View style={styles.date}>
+      <View style={styles.inputPair}>
           <Text style={styles.head}>Date: </Text>
           {!datePicker && (
-            <View style={{ marginBottom:10}}>
+            <View style={styles.inputText}>
               <Pressable style={styles.dateButton} onPress={showDatePicker}>
-                <Text style={styles.dateText}>{date.toDateString()}</Text>
+                <Text>{date.getDate() + ' / '+ (date.getMonth()+1) + ' / ' +date.getFullYear()}</Text>
               </Pressable>
             </View>
           )}
@@ -442,7 +448,7 @@ export default function AddIncome() {
        </View>
 
        <View style={styles.container1}>
-          <Text style={styles.head1}>Select Category</Text>
+          <Text style={styles.headCenter}>Select Category</Text>
           {/* <FlatList
         style={[
           {
@@ -459,7 +465,7 @@ export default function AddIncome() {
           /> */}
 
           <Dropdown
-            
+
             style={styles.dropdown}
             placeholderStyle={styles.placeholderStyle}
             selectedTextStyle={styles.selectedTextStyle}
@@ -488,25 +494,25 @@ export default function AddIncome() {
               />
             )}
           />
-          </View> 
+          </View>
 
           {/* <FontAwesomeIcon icon={solid('user-secret')} /> */}
-          {/* <Modal            
-          animationType = {"fade"}  
-          transparent = {false}  
-          visible = {isCatModalVisible}  
-          onRequestClose = {() =>{ console.log("Modal has been closed.") } }>  
-          
-              <View style = {styles.modal}>  
-              <TextInput 
+          {/* <Modal
+          animationType = {"fade"}
+          transparent = {false}
+          visible = {isCatModalVisible}
+          onRequestClose = {() =>{ console.log("Modal has been closed.") } }>
+
+              <View style = {styles.modal}>
+              <TextInput
                 style={styles.input}
                 placeholder='Enter Category'
                 onChangeText= {(text)=>{setSelectedCategory(text)}}/>
-              <Button title="Add Category" onPress = {() => {  
+              <Button title="Add Category" onPress = {() => {
                  setVisibilityOfCatModal(!isCatModalVisible)
                  setCategory([...category,{ label: selectedCategory, value: selectedCategory }])
-                 }}/>  
-          </View>  
+                 }}/>
+          </View>
         </Modal>   */}
 
           <Modal
@@ -543,24 +549,166 @@ export default function AddIncome() {
               </View>
             </View>
           </Modal>
-        </View>
-         
+
+
           {/* <Image source = {{uri :pickedImagePath}}
     style = {{width: '100%', height: 200}} onPress={()=>{setVisibili}}></Image> */}
-          {/* <Modal            
-          animationType = {"fade"}  
-          transparent = {false}  
-          visible = {isImgModalVisible}  
-          onRequestClose = {() =>{ console.log("Modal has been closed.") } }>  
-              <View style = {styles.modal}>  
+          {/* <Modal
+          animationType = {"fade"}
+          transparent = {false}
+          visible = {isImgModalVisible}
+          onRequestClose = {() =>{ console.log("Modal has been closed.") } }>
+              <View style = {styles.modal}>
                 <Button onPress={showImagePicker} title="Select an image" />
                 <Button onPress={openCamera} title="Open camera" />
-              <Button title="Close" onPress = {() => {  
+              <Button title="Close" onPress = {() => {
                  setVisibilityOfImgModal(!isImgModalVisible)
-                 }}/>  
-          </View>  
+                 }}/>
+          </View>
         </Modal>   */}
+        <View style={styles.container2}>
+					<Text style={styles.head}>Enter UPI of Reciever</Text>
+					<View style ={styles.container_btn_block}>
+            <TouchableOpacity
+              // onPress={() => {
+              //   console.log('close');
+              //   setQRScannerVisibility(false);
+              // }}
+              style={styles.container2_btn}
+              >
+              <Image source={require('../assets/input.png')} style={{ width: 25, height: 25, alignSelf:'center'}} />
+              <Text style={{textAlign: "center", color:"white"}}>
+                {' '}
+                Manual Input{' '}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              // onPress={() => {
+              //   console.log('close');
+              //   setQRScannerVisibility(false);
+              // }}
+              style={styles.container2_btn}
+              >
+              <Image source={require('../assets/scan.png')} style={{ width: 27, height: 27, alignSelf:'center'}} />
+              <Text style={{textAlign: "center", color:"white"}}>
+                {' '}
+                Scan QR{' '}
+              </Text>
+            </TouchableOpacity>
+					</View>
 
+					{/* <Modal
+						animationType="slide"
+						transparent
+						visible={modalForMannuylInputVisibility}
+						presentationStyle="overFullScreen"
+						onDismiss={() => {
+							setmodalForMannualInputVisibility(false);
+						}}
+						style={{
+							padding: 200,
+							backgroundColor: 'blue',
+						}}>
+						<View style={styles.viewWrapper}>
+							<View style={styles.modalView}>
+								<TextInput
+									placeholder="Enter Name of Payer..."
+									style={styles.textInput}
+									onChangeText={value => {
+										setPayerName(value);
+									}}
+								/>
+								<TextInput
+									placeholder="Enter Virtual Payment Address of Payer..."
+									style={styles.textInput}
+									onChangeText={value => {
+										setPayerUPI(value);
+									}}
+								/>
+								<View style={{flexDirection: 'row'}}>
+									<TouchableOpacity
+										onPress={() => {
+											console.log('submit');
+											redirectToUPIAppManualIn();
+										}}>
+										<Text
+											style={{
+												color: darkGreen,
+												fontSize: 15,
+												marginTop: 30,
+												fontWeight: 'bold',
+											}}>
+											{' '}
+											Submit{' '}
+										</Text>
+									</TouchableOpacity>
+									<TouchableOpacity
+										onPress={() => {
+											console.log('close');
+											setmodalForMannualInputVisibility(false);
+										}}>
+										<Text
+											style={{
+												color: darkGreen,
+												fontSize: 15,
+												marginTop: 30,
+												fontWeight: 'bold',
+											}}>
+											{' '}
+											Close{' '}
+										</Text>
+									</TouchableOpacity>
+								</View>
+							</View>
+						</View>
+					</Modal> */}
+
+
+					{/* <Modal
+						animationType="slide"
+						transparent
+						visible={device != null && QRScannerVisibility && hasPermission}
+						presentationStyle="overFullScreen"
+						onDismiss={() => {
+							setQRScannerVisibility(false);
+						}}
+						style={{
+							padding: 10,
+							backgroundColor: 'blue',
+						}}>
+						<View style={styles.viewWrapper}>
+							<View style={styles.modalViewCamera}>
+								<Camera
+									style={{
+										width: 250,
+										height: 250,
+										margin: 2,
+									}}
+									device={device}
+									isActive={true}
+									frameProcessor={frameProcessor}
+									frameProcessorFps={5}
+								/>
+								<TouchableOpacity
+									onPress={() => {
+										console.log('close');
+										setQRScannerVisibility(false);
+									}}>
+									<Text
+										style={{
+											color: darkGreen,
+											fontSize: 15,
+											marginTop: 30,
+											fontWeight: 'bold',
+										}}>
+										{' '}
+										Close{' '}
+									</Text>
+								</TouchableOpacity>
+							</View>
+						</View>
+					</Modal> */}
+				</View>
         <View style={styles.container2}>
          <Text style={styles.head}>Add note</Text>
         <TextInput
@@ -570,7 +718,7 @@ export default function AddIncome() {
             setDescription(value);
           }}
         />
-      <Text style={styles.head1}>Add Image</Text>
+      <Text style={styles.headCenter}>Add Image</Text>
 
           <Modal
             animationType="slide"
@@ -607,7 +755,7 @@ export default function AddIncome() {
             {pickedImagePath !== "" && (
               <Image
                 source={{ uri: pickedImagePath }}
-                style={{ width: 130, height: 90, alignSelf:'center', marginTop:5 }}
+                style={{ width: 50, height: 50, margin:15, alignSelf:'center'}}
                 onPress={() => {
                   console.log("image clicked");
                   setVisibilityOfImgModal(true);
@@ -616,7 +764,7 @@ export default function AddIncome() {
             )}
           </TouchableOpacity>
         </View>
-      
+
 
       <TouchableOpacity
       onPress={saveIncome}
@@ -629,32 +777,37 @@ export default function AddIncome() {
       marginVertical: 10,
       alignSelf:'center',
       //marginTop:30,
-      
+
     }}>
-    <Text style={{color: "white", fontSize: 20, fontWeight: 'bold'}}> Save </Text>
+    <Text style={{color: "white", fontSize: 20, fontWeight: 'bold', margin:0}}> Save </Text>
     </TouchableOpacity>
+    </ScrollView>
     </View>
-    </Background>
+    </View>
+    </ImageBackground>
+
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    height: 680,
-    width: 410,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    height: height*0.8,
+    width: width,
    backgroundColor: "#fff",
    marginTop: 5,
  },
 
   mainContainer: {
-    padding: 20,
-    flex: 2,
+    padding: 25,
+    flex: 1,
+    height:"100%",
+    justifyContent: "space-between"
   },
 
   container1: {
-    width:'98%',
+    width:"100%",
     alignSelf: "center",
     borderRadius:15,
     shadowOpacity:0.5,
@@ -667,9 +820,9 @@ const styles = StyleSheet.create({
     backgroundColor:"white",
     marginTop:20,
   },
-  
+
   container2: {
-    width:'87%',
+    width:"100%",
     alignSelf: "center",
     borderRadius:15,
     shadowOpacity:0.5,
@@ -683,7 +836,25 @@ const styles = StyleSheet.create({
     backgroundColor:"white",
     marginTop:30,
     paddingTop:5,
-    paddingLeft:20
+    paddingLeft:20,
+    paddingRight:20,
+  },
+  container_btn_block:{
+    flexDirection: 'row',
+    paddingBottom : 10 ,
+    paddingTop:10,
+    justifyContent: "space-around",
+  },
+  container2_btn:{
+    padding : 15,
+    flexGrow: 1,
+    flexShrink: 0,
+    flexBasis:100,
+    borderRadius:10,
+    backgroundColor:"#841584",
+    color : "white",
+    width : 150,
+    margin: 5,
   },
 
   Title: {
@@ -691,13 +862,13 @@ const styles = StyleSheet.create({
     fontSize: 50,
     fontWeight: "bold",
     marginVertical: 20,
-    alignSelf:"center"
+    alignSelf:"center",
   },
 
-  amt: {
+  inputPair: {
       flexDirection:"row",
-      justifyContent:"space-around",
-      padding:15      
+      justifyContent:"space-between",
+      padding:10
     },
 
     head: {
@@ -707,21 +878,21 @@ const styles = StyleSheet.create({
       color: darkGreen,
     },
 
-    input: {
-      borderRadius: 5, 
-      color: darkGreen, 
+    inputText: {
+      borderRadius: 5,
+      color: darkGreen,
       paddingHorizontal: 5,
-      width: '60%', 
-      height:30,
+      width: '60%',
+      height:35,
       backgroundColor: 'rgb(220,220, 220)',
-      justifyContent:'space-around'
     },
 
   input1: {
       borderWidth: 1,
       borderColor: '#777',
+      borderRadius:10,
       padding:10,
-      width: 250,
+      width: "100%",
       height:80,
       marginTop:10,
       marginBottom:15,
@@ -729,18 +900,13 @@ const styles = StyleSheet.create({
       textAlign : 'left'
     },
 
-    date: {
-      flexDirection:"row",
-      justifyContent:"space-around"
-    },
-
-    head1: {
-      marginTop:12,
+    headCenter: {
+      marginTop:10,
       fontWeight:"bold",
       alignSelf: "center",
       color: darkGreen,
       fontSize:16
-    },  
+    },
 
     dropDownStyle:{
       width:'85%',
@@ -832,13 +998,7 @@ alignItems:'center',
 backgroundColor: 'rgb(220,220, 220)',
 },
 
-  dateText: {
-    fontSize: 14,
-    lineHeight: 21,
-    letterSpacing: 0.25,
-    color: "black",
-  },
-
+ 
   catItem: {
     padding: 10,
     backgroundColor: "skyblue",
@@ -875,43 +1035,6 @@ backgroundColor: 'rgb(220,220, 220)',
     height: 40,
     fontSize: 16,
   },
-  
-  screen: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  imgButtonContainer: {
-    width: 400,
-    flexDirection: "column",
-    justifyContent: "space-around",
-  },
-  imageContainer: {
-    padding: 30,
-  },
-  
-  image: {
-    width: 200,
-    height: 10,
-    resizeMode: "cover",
-  },
-
-  buttonContainer: {
-    backgroundColor:'#33adff',
-    padding:5,
-  
-    alignItems:'center',
-    borderRadius:10,
-    width:"85%",
-    alignSelf:'center',
-    fontWeight:"bold",
-    fontSize:50,
-    paddingLeft:30,
-  },
-  
-  backImg: {
-    height: "100%"
-  },
 
   selImg :{
     backgroundColor: darkGreen,
@@ -921,6 +1044,6 @@ backgroundColor: 'rgb(220,220, 220)',
     paddingVertical: 5,
     marginVertical: 10,
     alignSelf:'center',
-    marginTop:5,    
+    marginTop:5,
   }
 });

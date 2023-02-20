@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Linking} from 'react-native'
+import { View, Text, Linking, FlatList, } from 'react-native'
 import { darkGreen } from "./Constants";
 import Btn from "./Btn";
 
@@ -18,25 +18,16 @@ export default function AddExpense() {
     }
     return (
         <View>
-            <Text>Add Expense</Text>
-            {/* <Btn
-              textColor="white"
-              bgColor={darkGreen}
-              btnLabel="Scan Receipt"
-              Press={addExpenseByScanningBills}
+            <FlatList
+                data={[{ 1: { key: 'row1' } }, { 2: { key: 'row2' } }, { 3: { key: 'row3' } }, { 4: { key: 'row4' } }, { 5: { key: 'row5' } }]}
+                renderItem={({ item, index }) =>
+                        <View style={{backgroundColor:"pink"}}>
+                            <Text>{item.key}</Text>
+                        </View>}
+                enableEmptySections={true}
+                keyExtractor={(item, index) => index}
+                style={{ borderColor: 'red', borderWidth: 1 , flex: 1 ,  width: "100%", height: 30} }
             />
-            <Btn
-              textColor="white"
-              bgColor="pink"
-              btnLabel="Redirect to Payment Apps"
-              Press={() => Linking.openURL("myapp://GPay/" )}
-            />
-            <Btn
-              textColor="white"
-              bgColor={darkGreen}
-              btnLabel="Mannually Add Expense Record"
-              Press={addExpenseManually}
-            /> */}
         </View>
     )
 }

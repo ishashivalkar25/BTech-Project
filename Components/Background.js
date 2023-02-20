@@ -1,8 +1,8 @@
 import React from "react";
-import { View, ImageBackground, ScrollView } from "react-native";
+import { View, ImageBackground, ScrollView , Dimensions} from "react-native";
 
 import {useSafeAreaInsets} from 'react-native-safe-area-context'; 
-
+const { width, height } = Dimensions.get("window");
 const Background = ({children}) => {
 
   const insets = useSafeAreaInsets();
@@ -11,7 +11,7 @@ const Background = ({children}) => {
     <View style={{marginTop:insets.top}}>
       <ImageBackground
         source={require('../assets/background4.jpg')}
-        style={{width: '100%', height: '100%'}}
+        style={{width: width, height: height}}
       >
         <ScrollView contentContainerStyle={{paddingBottom: 50}}>
           <View >{children}</View>
