@@ -113,28 +113,36 @@ function Income(props) {
         // filterRecordsDateWise();
         if (recordsFilter == "Day") 
         {
-            console.log("\n\Date\n\n")
+            console.log("\n\Date\n\n", incomeRecords);
             filterRecordsDateWise();
         }
         else if (recordsFilter == "Month") {
-            console.log("\n\nMonth\n\n")
+            console.log("\n\nMonth\n\n", incomeRecords)
             filterRecordsMonthWise();
         }
         else {
-
             console.log("\n\YYear\n\n")
             filterRecordsYearWise();
         }
         
-    }, [recordsFilter,date, month, year]);
+    }, [recordsFilter,date, month, year, incomeRecords]); 
 
     React.useEffect(() => {
+
+       
+         
+        //   convertImageToBase64('https://miro.medium.com/fit/c/64/64/1*3wTm70KPAVCovuotmFReJA.png', console.log("Successfull"))
+        // convertImageToBase64("C:/Users/ishas/Web Technology - Copy/ReactNative/IncomeAndExpenseTracker/assets/background2.jpg", ()=> {console.log("Successfull")})
         fetchRecords();
     }, []);
 
+    React.useEffect(() => {
+        filterRecordsCategotyWise();
+    }, [incomeRecordsDateWise, incomeRecordsMonthWise, incomeRecordsYearWise]);
+
     const getDateFormat = (timestamp) =>{
         const tempDate = new Date(timestamp*1000);
-        console.log(tempDate, "Templ Date");
+        // console.log(tempDate, "Templ Date");
         return tempDate.getDate() + ' / ' + (tempDate.getMonth() + 1) + ' / ' + tempDate.getFullYear();
     }
     const fetchRecords = async() => {
@@ -159,11 +167,10 @@ function Income(props) {
                     "incCategory": data.incCategory, 
                     "incDate": data.incDate 
                 };
-                incomeRecords.push(record)
-                setIncomeRecords(tempRecords);
+                tempRecords.push(record); 
             });
+            setIncomeRecords(tempRecords);
             filterRecordsDateWise();
-            filterRecordsCategotyWise();
             console.log(incomeRecords, "data");
         }
         catch (e) {
@@ -173,6 +180,7 @@ function Income(props) {
 
     const filterRecordsDateWise = () => {
         const tempRecords = [];
+        console.log(incomeRecords, "Datewise *-----------");
         incomeRecords.forEach((incomeRecord) => {
             const recordDate = getDateFormat(incomeRecord.incDate.seconds);
             const desiredDate = date.getDate() + ' / ' + (date.getMonth() + 1) + ' / ' + date.getFullYear();
@@ -182,7 +190,8 @@ function Income(props) {
                 console.log(incomeRecord, "Datewise");
             }
         })
-        setFilteredRecords(tempRecords);
+        setIncomeRecordsDateWise(tempRecords);
+        console.log(incomeRecordsDateWise, "Filtered Records")
     }
     const filterRecordsMonthWise = () => {
         const tempRecords = [];
@@ -194,46 +203,105 @@ function Income(props) {
                 console.log(incomeRecord, "MonthWise");
             }
         })
-        setFilteredRecords(tempRecords);
+        setIncomeRecordsMonthWise(tempRecords);
+        console.log(incomeRecordsMonthWise, "Filtered Records")
+        // incomeRecordsMonthWise
     }
     const filterRecordsYearWise = () => {
         const tempRecords = [];
+        
         incomeRecords.forEach((incomeRecord) => {
-            const recordYear = new Date(incomeRecord.incDate.seconds*1000).getMonth();
+            const recordYear = new Date(incomeRecord.incDate.seconds*1000).getFullYear();
             if(recordYear==year)
             {
                 tempRecords.push(incomeRecord);
                 console.log(incomeRecord, "YearWise");
             }
         })
-        setFilteredRecords(tempRecords);
+        setIncomeRecordsYearWise(tempRecords);
+        console.log(incomeRecordsYearWise, "Filtered Records")
     }
 
     const filterRecordsCategotyWise = () => {
         const categoryWiseAmt = [];
         const category = [];
-        incomeRecords.forEach((incomeRecord) => {
-            console.log(incomeRecord.incCategory, "Category Income");
-            // const recordYear = new Date(incomeRecord.incDate.seconds*1000).getMonth();
-            if(!category.includes(incomeRecord.incCategory))
-            {
-                category.push(incomeRecord.incCategory);
-                const data = { "name" : incomeRecord.incCategory , "amount" : incomeRecord.incAmount };
-                categoryWiseAmt.push(data);
-                // console.log(incomeRecord, "YearWise");
-            }
-            else
-            {
-                categoryWiseAmt.forEach((item)=>{
-                    if(item.category==incomeRecord.incCategory )
-                    {
-                        item.amount += incomeRecord.incAmount;
-                    }
-                })
-            }
-        })
+        if (recordsFilter == "Day") 
+        {
+            incomeRecordsDateWise.forEach((incomeRecord) => {
+                console.log(incomeRecord.incCategory, "Category Income");
+                // const recordYear = new Date(incomeRecord.incDate.seconds*1000).getMonth();
+                if(!category.includes(incomeRecord.incCategory))
+                {
+                    category.push(incomeRecord.incCategory);
+                    const data = { "name" : incomeRecord.incCategory , "amount" : Number(incomeRecord.incAmount) };
+                    categoryWiseAmt.push(data);
+                    // console.log(incomeRecord, "YearWise");
+                }
+                else
+                {
+                    console.log("Amount***");
+                    categoryWiseAmt.forEach((item)=>{
+                        if(item.name==incomeRecord.incCategory )
+                        {
+                            item.amount += Number(incomeRecord.incAmount);
+                        }
+                        console.log((item.name==incomeRecord.incCategory), "Amount***");
+                    })
+                }
+            })
+        }
+        else if (recordsFilter == "Month") {
+            incomeRecordsMonthWise.forEach((incomeRecord) => {
+                console.log(incomeRecord.incCategory, "Category Income");
+                // const recordYear = new Date(incomeRecord.incDate.seconds*1000).getMonth();
+              
+                if(!category.includes(incomeRecord.incCategory))
+                {
+                    category.push(incomeRecord.incCategory);
+                    const data = { "name" : incomeRecord.incCategory , "amount" : Number(incomeRecord.incAmount) };
+                    categoryWiseAmt.push(data);
+                    // console.log(incomeRecord, "YearWise");
+                }
+                else
+                {
+                    categoryWiseAmt.forEach((item)=>{
+                        if(item.name==incomeRecord.incCategory )
+                        {
+                            item.amount += Number(incomeRecord.incAmount);
+                        }
+                        console.log((item.name==incomeRecord.incCategory), "Amount***");
+                    })
+                }
+            })
+        }
+        else 
+        {
+            incomeRecordsYearWise.forEach((incomeRecord) => {
+                console.log(incomeRecord.incCategory, "Category Income");
+                // const recordYear = new Date(incomeRecord.incDate.seconds*1000).getMonth();
+                if(!category.includes(incomeRecord.incCategory))
+                {
+                    category.push(incomeRecord.incCategory);
+                    const data = { "name" : incomeRecord.incCategory , "amount" : Number(incomeRecord.incAmount) };
+                    categoryWiseAmt.push(data);
+                    // console.log(incomeRecord, "YearWise");
+                }
+                else
+                {
+                    categoryWiseAmt.forEach((item)=>{
+                        if(item.name==incomeRecord.incCategory )
+                        {
+                            item.amount += Number(incomeRecord.incAmount);
+                        }
+                        console.log(item.name,incomeRecord.incCategory, "Amount***")
+                    })
+                }
+                
+            })
+        }
+        
         setCategoryWiseInc(categoryWiseAmt);
-        console.log(category, "Category********************************************************************");
+        console.log(category);
         console.log(categoryWiseAmt, "Category------------------------------**********************************");
     }
     return (
@@ -335,10 +403,10 @@ function Income(props) {
 
                     </View>
 
-                    <View style={styles.record_container}>
+                    {recordsFilter=="Day" && (<View style={styles.record_container}>
 
-                        {filteredRecords.length > 0 && (<FlatList
-                            data={filteredRecords}
+                        {incomeRecordsDateWise.length > 0 && (<FlatList
+                            data={incomeRecordsDateWise}
                             renderItem={({ item }) =>
                                 <View style={styles.record}>
                                     <Text>{getDateFormat(item.incDate.seconds)}</Text>
@@ -348,8 +416,35 @@ function Income(props) {
                             }
                             enableEmptySections={true}
                         />)}
+                    </View>)}
+                    {recordsFilter=="Month" && (<View style={styles.record_container}>
 
-                    </View>
+                        {incomeRecordsMonthWise.length > 0 && (<FlatList
+                            data={incomeRecordsMonthWise}
+                            renderItem={({ item }) =>
+                                <View style={styles.record}>
+                                    <Text>{getDateFormat(item.incDate.seconds)}</Text>
+                                    <Text>{item.incCategory}</Text>
+                                    <Text>{item.incAmount}</Text>
+                                </View>
+                            }
+                            enableEmptySections={true}
+                        />)}
+                    </View>)}
+                    {recordsFilter=="Year" && (<View style={styles.record_container}>
+
+                        {incomeRecordsYearWise.length > 0 && (<FlatList
+                            data={incomeRecordsYearWise}
+                            renderItem={({ item }) =>
+                                <View style={styles.record}>
+                                    <Text>{getDateFormat(item.incDate.seconds)}</Text>
+                                    <Text>{item.incCategory}</Text>
+                                    <Text>{item.incAmount}</Text>
+                                </View>
+                            }
+                            enableEmptySections={true}
+                        />)}
+                    </View>)}
                     <View
                         style={{
                             position: "absolute",
@@ -640,6 +735,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
         padding: 0,
         borderRadius: 20,
+        height:350,
     },
     record:{
         flexDirection: 'row',

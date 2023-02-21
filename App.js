@@ -20,7 +20,7 @@ export default function App() {
     
   return (
     <SafeAreaProvider>
-      {/* <StatusBar></StatusBar> */}
+      <StatusBar></StatusBar>
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="Index" component={Index} />

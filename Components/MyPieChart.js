@@ -25,7 +25,7 @@ export default function MyPieChart(props) {
 
             const tempData = {
                 name : item.name ,       
-                amount: Number(item.amount) ,  
+                amount: item.amount ,  
                 color: "#" + ("000000" + color.toString(16)).slice(-6),
                 legendFontColor: '#7F7F7F',
                 legendFontSize: 15,
@@ -35,7 +35,7 @@ export default function MyPieChart(props) {
 
         setColors(colors);
         setData(pieData);
-        console.log(pieData, "Data");
+        console.log(pieData, "Data");     
     }, [props.data])
 
     return (
