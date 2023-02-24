@@ -13,9 +13,9 @@ const Background = ({children}) => {
         source={require('../assets/background4.jpg')}
         style={{width: width, height: height}}
       >
-        <ScrollView contentContainerStyle={{paddingBottom: 50}}>
+        {/* <ScrollView contentContainerStyle={{paddingBottom: 50}}> */}
           <View >{children}</View>
-        </ScrollView>
+        {/* </ScrollView> */}
       </ImageBackground>
     </View>
   );

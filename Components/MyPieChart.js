@@ -87,7 +87,6 @@ export default function MyPieChart(props) {
                 style={{
                     marginVertical: 8,
                     borderRadius: 16,
-                    backgroundColor: 'skyblue',
                 }}
                 accessor="amount"
                 backgroundColork="transparent"
